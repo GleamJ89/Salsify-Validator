@@ -6,7 +6,7 @@ on:
       product_id:
         description: "Salsify product ID"
         required: true
-        default: "42005773"
+        default: "42004974"
 
 jobs:
   get-product:
@@ -33,7 +33,21 @@ jobs:
             "Salsify_ID": ."salsify:id",
             Status: .Status,
             "Variation_Group_ID": ."Variation_Group-ID",
-            Validation_DigitalAssets: .Validation_DigitalAssets
+            Validation_DigitalAssets: .Validation_DigitalAssets,
+            attributes: [
+              {
+                name: ."Variation Name 1"."en-GB" // empty,
+                value: ."Variation Value 1"."en-GB" // empty
+              },
+              {
+                name: ."Variation Name 2"."en-GB" // empty,
+                value: ."Variation Value 2"."en-GB" // empty
+              },
+              {
+                name: ."Variation Name 3"."en-GB" // empty,
+                value: ."Variation Value 3"."en-GB" // empty
+              }
+            ]
           }' product.json > limited_salsify_product_info.json
 
       - name: Show filtered result
