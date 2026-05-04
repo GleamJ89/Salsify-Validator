@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Get product from Salsify
         env:
-          SALSIFY_TOKEN: kJZE1NKCuoOi7oyhYAv-81KIK4sN3dvmsskJD_zKLFc
-          SALSIFY_ORG_ID: s-852ea8aa-b3aa-44b6-8c04-7bc2acefd665
           PRODUCT_ID: ${{ github.event.inputs.product_id }}
         run: |
           curl -s \
