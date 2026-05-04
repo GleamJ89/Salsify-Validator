@@ -1,0 +1,46 @@
+name: Get Salsify Product Info
+
+on:
+  workflow_dispatch:
+    inputs:
+      product_id:
+        description: "Salsify product ID"
+        required: true
+        default: "42005773"
+
+jobs:
+  get-product:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get product from Salsify
+        env:
+          SALSIFY_TOKEN: kJZE1NKCuoOi7oyhYAv-81KIK4sN3dvmsskJD_zKLFc
+          SALSIFY_ORG_ID: s-852ea8aa-b3aa-44b6-8c04-7bc2acefd665
+          PRODUCT_ID: ${{ github.event.inputs.product_id }}
+        run: |
+          curl -s \
+            -H "Authorization: Bearer $SALSIFY_TOKEN" \
+            -H "Content-Type: application/json" \
+            "https://app.salsify.com/api/v1/orgs/$SALSIFY_ORG_ID/products/$PRODUCT_ID" \
+            -o product.json
+
+      - name: Keep only required fields
+        run: |
+          jq '{
+            EAN: .EAN,
+            "Salsify_Parent_ID": ."salsify:parent_id",
+            "Salsify_ID": ."salsify:id",
+            Status: .Status,
+            "Variation_Group_ID": ."Variation_Group-ID",
+            Validation_DigitalAssets: .Validation_DigitalAssets
+          }' product.json > limited_salsify_product_info.json
+
+      - name: Show filtered result
+        run: cat limited_salsify_product_info.json
+
+      - name: Upload result file
+        uses: actions/upload-artifact@v4
+        with:
+          name: limited-salsify-product-info
+          path: limited_salsify_product_info.json
